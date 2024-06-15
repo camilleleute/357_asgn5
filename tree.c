@@ -11,9 +11,10 @@
 #include "tree.h"
 int aflag = 0, lflag = 0, status = EXIT_SUCCESS;
 
-int integer(const char *string) {
+int integer(char *string) {
 	//printf("hiya\n");
 	while (*string) {
+		//printf("where r u segf\n");
 		if (!isdigit(*string)) {
 			return 0;
 		}
@@ -30,7 +31,7 @@ int main(int argc, char * argv[]) {
 	struct stat buff;
 	char linker[PATH_MAX];
 
-	while ((opt = getopt(argc, argv, "adl:")) != -1) {
+	while ((opt = getopt(argc, argv, "ad:l")) != -1) {
 		switch (opt) {
 			case 'a':
 				aflag = 1;
@@ -53,21 +54,15 @@ int main(int argc, char * argv[]) {
 					exit(EXIT_FAILURE);
 				}
 				break;
-				//} else {
-				//	printf("hi\n");
-				//	fprintf(stderr, "usage: ./tree [-a] [-d N] [-l] [PATH]\n");
-                                //        exit(EXIT_FAILURE);
-				//}
 			default:
 				fprintf(stderr, "usage: ./tree [-a] [-d N] [-l] [PATH]\n");
                                 exit(EXIT_FAILURE);
 		}
 	}
-	printf("hi\n");
-	if (argc != 2) {
-		optind--;
-	}
-	path = argv[optind];
+	if (optind < argc) {
+        	path = argv[optind];
+    	}	
+
 	if (lstat(path, &buff) == -1) {
 		fprintf(stdout, "%s: %s\n", path, strerror(errno));
         	status = EXIT_FAILURE;
